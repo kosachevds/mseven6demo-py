@@ -114,12 +114,6 @@ class EvtRpcVariantType(ndr.NDRENUM):
         GuidArray = 10
 
 
-class PConformantVaryingString(ndr.NDRPOINTER):
-    referent = (
-        ('Data', ndr.NDRConformantVaryingString),
-    )
-
-
 class EvtRpcVariantVal(ndr.NDRUNION):
     notAlign = True
     commonHdr = (
@@ -130,7 +124,7 @@ class EvtRpcVariantVal(ndr.NDRUNION):
         EvtRpcVariantType.Boolean: ('Boolean', dtypes.BOOLEAN),
         EvtRpcVariantType.UInt32: ('UInt32', dtypes.ULONG),
         EvtRpcVariantType.UInt64: ('UInt64', dtypes.ULONGLONG),
-        EvtRpcVariantType.String: ('String', PConformantVaryingString),
+        EvtRpcVariantType.String: ('String', dtypes.LPWSTR),
         EvtRpcVariantType.Guid: ('Guid', dtypes.PGUID),
         EvtRpcVariantType.BooleanArray: ('BooleanArray', BooleanArray),
         EvtRpcVariantType.UInt32Array: ('UInt32Array', UInt32Array),
