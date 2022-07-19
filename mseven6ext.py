@@ -162,6 +162,11 @@ class EvtRpcVariantList(ndr.NDRSTRUCT):
     )
 
 
+class ContextHandlePublisherMetadata(even6.CONTEXT_HANDLE_LOG_HANDLE):
+    def getAlignment(self):
+        return self.align
+
+
 class EvtRpcQuerySeekFixed(even6.EvtRpcQuerySeek):
     structure = (
         ('LogQuery', even6.CONTEXT_HANDLE_LOG_QUERY),
@@ -211,10 +216,8 @@ class EvtRpcGetPublisherMetadata(ndr.NDRCALL):
 class EvtRpcGetPublisherMetadataResponse(ndr.NDRCALL):
     structure = (
         ('PubMetadataProps', EvtRpcVariantList),
-        ('Other', ':'),
-        # ("Raw", ":"),
-        # ('PubMetadata', even6.CONTEXT_HANDLE_LOG_HANDLE),
-        # ('Error', dtypes.ULONG),
+        ('PubMetadata', ContextHandlePublisherMetadata),
+        ('Error', dtypes.ULONG),
     )
 
 
