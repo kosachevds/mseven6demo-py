@@ -67,7 +67,7 @@ class UInt64Array(ndr.NDRSTRUCT):
 class StringArray(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
         class Array(ndr.NDRUniConformantArray):
-            item = ndr.NDRConformantVaryingString
+            item = dtypes.LPWSTR
 
         referent = (
             ('Data', Array),
