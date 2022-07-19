@@ -162,10 +162,6 @@ class EvtRpcVariantList(ndr.NDRSTRUCT):
     )
 
 
-class LPWSTR_ARRAY(ndr.NDRUniVaryingArray):
-    item = dtypes.LPWSTR
-
-
 class EvtRpcQuerySeekFixed(even6.EvtRpcQuerySeek):
     structure = (
         ('LogQuery', even6.CONTEXT_HANDLE_LOG_QUERY),
@@ -222,21 +218,4 @@ class EvtRpcGetPublisherMetadataResponse(ndr.NDRCALL):
     )
 
 
-class EvtRpcGetPublisherListForChannel(ndr.NDRCALL):
-    opnum = 23
-    structure = (
-        ('ChannelName', dtypes.WSTR),
-        ('Flags', dtypes.DWORD),
-    )
-
-
-class EvtRpcGetPublisherListForChannelResponse(ndr.NDRCALL):
-    structure = (
-        ('NumPublisherIds', dtypes.DWORD),
-        ('PublisherIds', LPWSTR_ARRAY),
-        ('Error', dtypes.ULONG),
-    )
-
-
 even6.OPNUMS[12] = (EvtRpcQuerySeekFixed, EvtRpcQuerySeekFixedResponse)
-even6.OPNUMS[23] = (EvtRpcGetPublisherListForChannel, EvtRpcGetPublisherListForChannelResponse)
