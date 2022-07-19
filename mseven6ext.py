@@ -21,7 +21,7 @@ class EventDescriptor(ndr.NDRSTRUCT):
 
 class BooleanArray(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = dtypes.BOOLEAN
 
         referent = (
@@ -36,7 +36,7 @@ class BooleanArray(ndr.NDRSTRUCT):
 
 class UInt32Array(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = dtypes.ULONG
 
         referent = (
@@ -51,7 +51,7 @@ class UInt32Array(ndr.NDRSTRUCT):
 
 class UInt64Array(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = dtypes.ULONGLONG
 
         referent = (
@@ -66,7 +66,7 @@ class UInt64Array(ndr.NDRSTRUCT):
 
 class StringArray(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = ndr.NDRConformantVaryingString
 
         referent = (
@@ -81,7 +81,7 @@ class StringArray(ndr.NDRSTRUCT):
 
 class GuidArray(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = dtypes.GUID
 
         referent = (
@@ -155,7 +155,7 @@ class EvtRpcVariant(ndr.NDRSTRUCT):
 
 class EvtRpcVariantList(ndr.NDRSTRUCT):
     class PArray(ndr.NDRPOINTER):
-        class Array(ndr.NDRUniVaryingArray):
+        class Array(ndr.NDRUniConformantArray):
             item = EvtRpcVariant
 
         referent = (
