@@ -33,7 +33,8 @@ def main():
         print(i, ": ", prop['Type'])
     # with open("raw_resp.bin", "wb") as fd:
         # fd.write(resp["Raw"])
-    handle = resp['Other'][-24:-4]
+    # handle = resp['Other'][-24:-4]
+    handle = resp['PubMetadata']
 
     event = mseven6ext.EventDescriptor()
     event['Id'] = 400
