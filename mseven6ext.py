@@ -101,17 +101,17 @@ class EvtRpcVariantType(ndr.NDRENUM):
     )
 
     class enumItems(enum.Enum):
-        EvtRpcVarTypeNull = 0
-        EvtRpcVarTypeBoolean = 1
-        EvtRpcVarTypeUInt32 = 2
-        EvtRpcVarTypeUInt64 = 3
-        EvtRpcVarTypeString = 4
-        EvtRpcVarTypeGuid = 5
-        EvtRpcVarTypeBooleanArray = 6
-        EvtRpcVarTypeUInt32Array = 7
-        EvtRpcVarTypeUInt64Array = 8
-        EvtRpcVarTypeStringArray = 9
-        EvtRpcVarTypeGuidArray = 10
+        Null = 0
+        Boolean = 1
+        UInt32 = 2
+        UInt64 = 3
+        String = 4
+        Guid = 5
+        BooleanArray = 6
+        UInt32Array = 7
+        UInt64Array = 8
+        StringArray = 9
+        GuidArray = 10
 
 
 class PConformantVaryingString(ndr.NDRPOINTER):
@@ -126,17 +126,17 @@ class EvtRpcVariantVal(ndr.NDRUNION):
         ('tag', dtypes.ULONG),
     )
     union = {
-        EvtRpcVariantType.EvtRpcVarTypeNull: ('NullVal', dtypes.INT),
-        EvtRpcVariantType.EvtRpcVarTypeBoolean: ('BooleanVal', dtypes.BOOLEAN),
-        EvtRpcVariantType.EvtRpcVarTypeUInt32: ('UInt32Val', dtypes.ULONG),
-        EvtRpcVariantType.EvtRpcVarTypeUInt64: ('UInt64Val', dtypes.ULONGLONG),
-        EvtRpcVariantType.EvtRpcVarTypeString: ('StringVal', PConformantVaryingString),
-        EvtRpcVariantType.EvtRpcVarTypeGuid: ('GuidVal', dtypes.PGUID),
-        EvtRpcVariantType.EvtRpcVarTypeBooleanArray: ('BooleanArrayVal', BooleanArray),
-        EvtRpcVariantType.EvtRpcVarTypeUInt32Array: ('UInt32ArrayVal', UInt32Array),
-        EvtRpcVariantType.EvtRpcVarTypeUInt64Array: ('UInt64ArrayVal', UInt64Array),
-        EvtRpcVariantType.EvtRpcVarTypeStringArray: ('StringArrayVal', StringArray),
-        EvtRpcVariantType.EvtRpcVarTypeGuidArray: ('GuidArrayVal', GuidArray),
+        EvtRpcVariantType.Null: ('Null', dtypes.INT),
+        EvtRpcVariantType.Boolean: ('Boolean', dtypes.BOOLEAN),
+        EvtRpcVariantType.UInt32: ('UInt32', dtypes.ULONG),
+        EvtRpcVariantType.UInt64: ('UInt64', dtypes.ULONGLONG),
+        EvtRpcVariantType.String: ('String', PConformantVaryingString),
+        EvtRpcVariantType.Guid: ('Guid', dtypes.PGUID),
+        EvtRpcVariantType.BooleanArray: ('BooleanArray', BooleanArray),
+        EvtRpcVariantType.UInt32Array: ('UInt32Array', UInt32Array),
+        EvtRpcVariantType.UInt64Array: ('UInt64Array', UInt64Array),
+        EvtRpcVariantType.StringArray: ('StringArray', StringArray),
+        EvtRpcVariantType.GuidArray: ('GuidArray', GuidArray),
     }
 
 
