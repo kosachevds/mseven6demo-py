@@ -29,11 +29,6 @@ def main():
     req['Locale'] = 1033  # en-US
     req['Flags'] = 0
     resp = dce.request(req)
-    for i, prop in enumerate(resp['PubMetadataProps']['Props']):
-        print(i, ": ", prop['Type'])
-    # with open("raw_resp.bin", "wb") as fd:
-        # fd.write(resp["Raw"])
-    # handle = resp['Other'][-24:-4]
     handle = resp['PubMetadata']
 
     event = mseven6ext.EventDescriptor()
