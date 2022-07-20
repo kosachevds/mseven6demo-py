@@ -1,6 +1,5 @@
 import uuid
-from impacket.dcerpc.v5 import epm, even6, transport, dtypes
-from impacket.dcerpc.v5.rpcrt import RPC_C_AUTHN_LEVEL_PKT_PRIVACY
+from impacket.dcerpc.v5 import epm, even6, transport, dtypes, rpcrt
 
 from binxml import ResultSet
 import mseven6ext
@@ -20,7 +19,7 @@ def main():
     rpc_transport = transport.DCERPCTransportFactory(string_binding)
     rpc_transport.set_credentials(_USERNAME, _PASSWORD, _DOMAIN)
     dce = rpc_transport.get_dce_rpc()
-    dce.set_auth_level(RPC_C_AUTHN_LEVEL_PKT_PRIVACY)
+    dce.set_auth_level(rpcrt.RPC_C_AUTHN_LEVEL_PKT_PRIVACY)
     dce.connect()
     dce.bind(_IFACE_UUID)
 
