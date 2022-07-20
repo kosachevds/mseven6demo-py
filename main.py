@@ -58,8 +58,10 @@ def main():
     req['Values'] = values
     req['Flags'] = 0x00000002
     req['MaxSizeString'] = 1024
+
     resp = dce.request(req)
     print(resp['ActualSizeString'])
+    print(b''.join(resp['String']).decode('utf-16'))
 
 
 if __name__ == "__main__":
