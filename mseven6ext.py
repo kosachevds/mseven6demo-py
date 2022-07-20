@@ -198,7 +198,7 @@ class EvtRpcMessageRenderResponse(ndr.NDRCALL):
     structure = (
         ('ActualSizeString', dtypes.DWORD),
         ('NeededSizeString', dtypes.DWORD),
-        ('String,', even6.BYTE_ARRAY),
+        ('String', even6.BYTE_ARRAY),
         ('Error', even6.RPC_INFO),
     )
 
