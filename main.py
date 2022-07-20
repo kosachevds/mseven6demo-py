@@ -1,5 +1,5 @@
 import uuid
-from impacket.dcerpc.v5 import epm, even6, transport, dtypes, rpcrt
+from impacket.dcerpc.v5 import epm, even6, transport, dtypes, rpcrt, ndr
 
 from binxml import ResultSet
 import mseven6ext
@@ -40,7 +40,11 @@ def main():
     event['Opcode'] = 0
     event['Task'] = 0
     event['Keyword'] = 0x8000000000000000
-    rawEvent = event.getData()
+    raw_event = event.getData()
+
+    event_id = ndr.NDRUniConformantArray()
+    event_id['MaximumCount'] = len(raw_event)
+    event_id['Data'] = raw_event
 
     values = mseven6ext.EvtRpcVariantList()
     values['Count'] = 0
@@ -48,8 +52,8 @@ def main():
 
     req = mseven6ext.EvtRpcMessageRender()
     req['PubMetadataHandle'] = handle
-    req['SizeEventId'] = len(rawEvent)
-    req['EventId'] = rawEvent
+    req['SizeEventId'] = len(raw_event)
+    req['EventId'] = event_id
     req['MessageId'] = 0
     req['Values'] = values
     req['Flags'] = 0x00000002
