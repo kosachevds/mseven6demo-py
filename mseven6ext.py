@@ -184,9 +184,9 @@ class EvtRpcQuerySeekFixedResponse(even6.EvtRpcQuerySeekResponse):
 class EvtRpcMessageRender(ndr.NDRCALL):
     opnum = 9
     structure = (
-        ('PubMetadataHandle', even6.CONTEXT_HANDLE_LOG_HANDLE),
+        ('PubMetadataHandle', ContextHandlePublisherMetadata),
         ('SizeEventId', dtypes.DWORD),
-        ('EventId', even6.BYTE_ARRAY),
+        ('EventId', ndr.NDRUniConformantArray),
         ('MessageId', dtypes.DWORD),
         ('Values', EvtRpcVariantList),
         ('Flags', dtypes.DWORD),
