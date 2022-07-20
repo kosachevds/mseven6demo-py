@@ -1,3 +1,4 @@
+import uuid
 from impacket.dcerpc.v5 import epm, even6, transport, dtypes
 from impacket.dcerpc.v5.rpcrt import RPC_C_AUTHN_LEVEL_PKT_PRIVACY
 
@@ -30,6 +31,7 @@ def main():
     req['Flags'] = 0
     resp = dce.request(req)
     handle = resp['PubMetadata']
+    print(uuid.UUID(bytes=handle[4:]))
 
     event = mseven6ext.EventDescriptor()
     event['Id'] = 400
