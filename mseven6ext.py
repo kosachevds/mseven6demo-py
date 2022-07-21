@@ -203,6 +203,27 @@ class EvtRpcMessageRenderResponse(ndr.NDRCALL):
     )
 
 
+class EvtRpcMessageRenderDefault(ndr.NDRCALL):
+    opnum = 10
+    structure = (
+        ('SizeEventId', dtypes.DWORD),
+        ('EventId', ndr.NDRUniConformantArray),
+        ('MessageId', dtypes.DWORD),
+        ('Values', EvtRpcVariantList),
+        ('Flags', dtypes.DWORD),
+        ('MaxSizeString', dtypes.DWORD),
+    )
+
+
+class EvtRpcMessageRenderDefaultResponse(ndr.NDRCALL):
+    structure = (
+        ('ActualSizeString', dtypes.DWORD),
+        ('NeededSizeString', dtypes.DWORD),
+        ('String', even6.BYTE_ARRAY),
+        ('Error', even6.RPC_INFO),
+    )
+
+
 class EvtRpcGetPublisherMetadata(ndr.NDRCALL):
     opnum = 24
     structure = (
