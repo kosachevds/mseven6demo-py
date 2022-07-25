@@ -54,7 +54,7 @@ def main():
     req['PubMetadataHandle'] = handle
     req['SizeEventId'] = len(raw_event)
     req['EventId'] = event_id
-    req['MessageId'] = 0
+    req['MessageId'] = -1
     req['Values'] = values
     req['Flags'] = 0x00000002
     req['MaxSizeString'] = 1024
