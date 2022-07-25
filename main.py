@@ -23,15 +23,6 @@ def main():
     dce.connect()
     dce.bind(_IFACE_UUID)
 
-    req = mseven6ext.EvtRpcGetPublisherMetadata()
-    req['PublisherId'] = 'PowerShell\x00'
-    req['LogFilePath'] = 'Windows PowerShell\x00'
-    req['Locale'] = 1033  # en-US
-    req['Flags'] = 0
-    resp = dce.request(req)
-    handle = resp['PubMetadata']
-    print(uuid.UUID(bytes=handle[4:]))
-
     event = mseven6ext.EventDescriptor()
     event['Id'] = 400
     event['Version'] = 0
@@ -50,8 +41,7 @@ def main():
     values['Count'] = 0
     values['Props'] = mseven6ext.EvtRpcVariantList.PArray()
 
-    req = mseven6ext.EvtRpcMessageRender()
-    req['PubMetadataHandle'] = handle
+    req = mseven6ext.EvtRpcMessageRenderDefault()
     req['SizeEventId'] = len(raw_event)
     req['EventId'] = event_id
     req['MessageId'] = -1
