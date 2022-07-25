@@ -34,18 +34,13 @@ def main():
     raw_event = event.getData()
 
     event_id = ndr.NDRUniConformantArray()
-    event_id['MaximumCount'] = len(raw_event)
     event_id['Data'] = raw_event
-
-    values = mseven6ext.EvtRpcVariantList()
-    values['Count'] = 0
-    values['Props'] = mseven6ext.EvtRpcVariantList.PArray()
 
     req = mseven6ext.EvtRpcMessageRenderDefault()
     req['SizeEventId'] = len(raw_event)
     req['EventId'] = event_id
     req['MessageId'] = 0xffffffff  # -1
-    req['Values'] = values
+    req['Values'] = mseven6ext.EvtRpcVariantList()
     req['Flags'] = 0x00000002
     req['MaxSizeString'] = 1024
 
