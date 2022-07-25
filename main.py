@@ -44,7 +44,7 @@ def main():
     req = mseven6ext.EvtRpcMessageRenderDefault()
     req['SizeEventId'] = len(raw_event)
     req['EventId'] = event_id
-    req['MessageId'] = -1
+    req['MessageId'] = 0xffffffff  # -1
     req['Values'] = values
     req['Flags'] = 0x00000002
     req['MaxSizeString'] = 1024
