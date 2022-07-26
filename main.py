@@ -31,13 +31,12 @@ def main():
     event['Opcode'] = 0
     event['Task'] = 0
     event['Keyword'] = 0x8000000000000000
-    raw_event = event.getData()
 
     event_id = ndr.NDRUniConformantArray()
-    event_id['Data'] = raw_event
+    event_id['Data'] = event.getData()
 
     req = mseven6ext.EvtRpcMessageRenderDefault()
-    req['SizeEventId'] = len(raw_event)
+    req['SizeEventId'] = len(event_id)
     req['EventId'] = event_id
     req['MessageId'] = 0xffffffff  # -1
     req['Values'] = mseven6ext.EvtRpcVariantList()
