@@ -44,7 +44,6 @@ def main():
     req['MaxSizeString'] = 1024
 
     resp = dce.request(req)
-    print(resp['ActualSizeString'])
     print(b''.join(resp['String']).decode('utf-16'))
 
 
