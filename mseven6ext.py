@@ -94,6 +94,12 @@ class GuidArray(ndr.NDRSTRUCT):
     )
 
 
+class PByteArray(ndr.NDRPOINTER):
+    referent = (
+        ('Data', ndr.NDRUniConformantArray),
+    )
+
+
 class EvtRpcVariantType(ndr.NDRENUM):
     align = 4
     structure = (
@@ -198,7 +204,7 @@ class EvtRpcMessageRenderResponse(ndr.NDRCALL):
     structure = (
         ('ActualSizeString', dtypes.DWORD),
         ('NeededSizeString', dtypes.DWORD),
-        ('String', even6.BYTE_ARRAY),
+        ('String', PByteArray),
         ('Error', even6.RPC_INFO),
     )
 
@@ -219,7 +225,7 @@ class EvtRpcMessageRenderDefaultResponse(ndr.NDRCALL):
     structure = (
         ('ActualSizeString', dtypes.DWORD),
         ('NeededSizeString', dtypes.DWORD),
-        ('String', even6.BYTE_ARRAY),
+        ('String', PByteArray),
         ('Error', even6.RPC_INFO),
     )
 
