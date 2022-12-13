@@ -23,7 +23,7 @@ class Substitution:
         if value.type == 0x0:
             return None if self._optional else ""
         if self._type == 0x1:
-            return value.data.decode('utf16')
+            return escape(value.data.decode('utf16'))
         elif self._type == 0x4:
             return str(struct.unpack('<B', value.data)[0])
         elif self._type == 0x6:
@@ -60,7 +60,8 @@ class Substitution:
 class Value:
     def __init__(self, buf, offset):
         length = struct.unpack_from('<BBH', buf, offset)[2]
-        self._val = buf[offset + 4:offset + 4 + length * 2].decode("utf16")
+        raw_value = buf[offset + 4:offset + 4 + length * 2]
+        self._val = escape(raw_value.decode("utf16"))
 
         self.length = 4 + length * 2
 
