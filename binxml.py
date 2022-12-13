@@ -43,7 +43,7 @@ class Substitution:
             iav = struct.unpack_from('>Q', value.data, 2)[0]
             sub_ids = [struct.unpack('<I', value.data[8 + 4 * i:12 + 4 * i])[0] for i in range(number_of_sub_ids)]
             return 'S-{0}-{1}-{2}'.format(revision, iav, '-'.join([str(sub_id) for sub_id in sub_ids]))
-        elif self._type == 0x15 or self._type == 0x10:
+        elif self._type == 0x15 or self._type == 0x10 or self._type == 0x14:
             return '0x' + value.data[::-1].hex()
         elif self._type == 0x21:
             return value.template.xml()
