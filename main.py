@@ -54,8 +54,7 @@ def main():
             event_offset = resp['EventDataIndices'][i]['Data']
             event_size = resp['EventDataSizes'][i]['Data']
             event = resp['ResultBuffer'][event_offset:event_offset + event_size]
-            event_bytes = b''.join(event)
-            events.append(ResultSet(event_bytes).xml())
+            events.append(b''.join(event))
 
             eps_count += 1
             now = datetime.now()
@@ -68,8 +67,8 @@ def main():
     total_sec = (datetime.now() - total_begin).total_seconds()
     print("Total EPS: ", total_events / total_sec)
 
-    with codecs.open("data/events.txt", "w", encoding="utf-8") as f:
-        f.write("\n".join(events))
+    with open("raw_events.tmp", "wb") as f:
+        f.write(b"".join(events))
 
 
 if __name__ == "__main__":
