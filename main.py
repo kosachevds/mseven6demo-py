@@ -35,7 +35,9 @@ def main():
     log_handle = resp['Handle']
     events = []
 
-    last_eps_write_time = datetime.now()
+    total_events = 0
+    total_begin = datetime.now()
+    last_eps_write_time = total_begin
     eps_count = 0
     while True:
         request = even6.EvtRpcQueryNext()
@@ -47,6 +49,7 @@ def main():
         num_records = resp['NumActualRecords']
         if num_records == 0:
             break
+        total_events += num_records
         for i in range(num_records):
             event_offset = resp['EventDataIndices'][i]['Data']
             event_size = resp['EventDataSizes'][i]['Data']
@@ -61,6 +64,9 @@ def main():
                 print("EPS: ", eps_count / diff_sec)
                 eps_count = 0
                 last_eps_write_time = now
+
+    total_sec = (datetime.now() - total_begin).total_seconds()
+    print("Total EPS: ", total_events / total_sec)
 
     with codecs.open("data/events.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(events))
