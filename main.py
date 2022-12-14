@@ -1,33 +1,36 @@
 import codecs
-from impacket.dcerpc.v5 import epm, even6, transport, dtypes, rpcrt, ndr
-
-from binxml import ResultSet
-import mseven6ext
+import sys
 from datetime import datetime
+
+from impacket.dcerpc.v5 import dtypes, epm, even6, ndr, rpcrt, transport
+
+import mseven6ext
+from binxml import ResultSet
 
 _IFACE_UUID = even6.MSRPC_UUID_EVEN6
 _EVT_SEEK_RELATIVE_TO_FIRST = 0x00000001
 
-_HOST = "172.30.254.52"
-_USERNAME = "reader"
-_PASSWORD = "P@ssw0rd"
 _DOMAIN = "."
-_CHANNEL = "Security"
 _BATCH_SIZE = 31
 _EPS_WRITE_INTERVAL_SEC = 2
 
 
 def main():
-    string_binding = epm.hept_map(_HOST, _IFACE_UUID, protocol="ncacn_ip_tcp")
+    host = sys.argv[1]
+    username = sys.argv[2]
+    password = sys.argv[3]
+    channel = sys.argv[4]
+
+    string_binding = epm.hept_map(host, _IFACE_UUID, protocol="ncacn_ip_tcp")
     rpc_transport = transport.DCERPCTransportFactory(string_binding)
-    rpc_transport.set_credentials(_USERNAME, _PASSWORD, _DOMAIN)
+    rpc_transport.set_credentials(username, password, _DOMAIN)
     dce = rpc_transport.get_dce_rpc()
     dce.set_auth_level(rpcrt.RPC_C_AUTHN_LEVEL_PKT_PRIVACY)
     dce.connect()
     dce.bind(_IFACE_UUID)
 
     request = even6.EvtRpcRegisterLogQuery()
-    request['Path'] = _CHANNEL + '\x00'
+    request['Path'] = channel + '\x00'
     request['Query'] = "*" + '\x00'
     request['Flags'] = even6.EvtQueryChannelName | even6.EvtReadNewestToOldest
 
