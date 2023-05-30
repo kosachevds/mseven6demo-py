@@ -4,9 +4,6 @@ from datetime import datetime
 
 from impacket.dcerpc.v5 import dtypes, epm, even6, ndr, rpcrt, transport
 
-import mseven6ext
-from binxml import ResultSet
-
 _IFACE_UUID = even6.MSRPC_UUID_EVEN6
 _EVT_SEEK_RELATIVE_TO_FIRST = 0x00000001
 
