@@ -4,6 +4,8 @@ from datetime import datetime
 
 from impacket.dcerpc.v5 import dtypes, epm, even6, ndr, rpcrt, transport
 
+from binxml import ResultSet
+
 _IFACE_UUID = even6.MSRPC_UUID_EVEN6
 _EVT_SEEK_RELATIVE_TO_FIRST = 0x00000001
 
@@ -34,6 +36,7 @@ def main():
     resp = dce.request(request)
     log_handle = resp['Handle']
 
+    events = []
     while True:
         request = even6.EvtRpcQueryNext()
         request['LogQuery'] = log_handle
@@ -48,6 +51,11 @@ def main():
             event_offset = resp['EventDataIndices'][i]['Data']
             event_size = resp['EventDataSizes'][i]['Data']
             event = resp['ResultBuffer'][event_offset:event_offset + event_size]
+            event_bytes = b''.join(event)
+            events.append(ResultSet(event_bytes).xml())
+
+    with codecs.open("data/events.txt", "w", encoding="utf-8") as f:
+        f.write("\n".join(events))
 
 
 if __name__ == "__main__":
