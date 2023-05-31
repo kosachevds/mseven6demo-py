@@ -12,6 +12,7 @@ _EVT_SEEK_RELATIVE_TO_FIRST = 0x00000001
 _DOMAIN = "."
 _BATCH_SIZE = 31
 _EPS_WRITE_INTERVAL_SEC = 2
+_MAX_EVENTS = 10000
 
 
 def main():
@@ -37,7 +38,7 @@ def main():
     log_handle = resp['Handle']
 
     events = []
-    while True:
+    while len(events) <= _MAX_EVENTS:
         request = even6.EvtRpcQueryNext()
         request['LogQuery'] = log_handle
         request['NumRequestedRecords'] = _BATCH_SIZE
