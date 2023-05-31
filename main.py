@@ -52,8 +52,8 @@ def main():
             event_offset = resp['EventDataIndices'][i]['Data']
             event_size = resp['EventDataSizes'][i]['Data']
             event = resp['ResultBuffer'][event_offset:event_offset + event_size]
-            event_bytes = b''.join(event)
-            events.append(ResultSet(event_bytes).xml())
+            # event_bytes = b''.join(event)
+            events.append(ResultSet(event).xml())
 
     with codecs.open("data/events.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(events))

@@ -22,9 +22,10 @@
 # Author:
 #   Itamar (@MrAnde7son)
 #
-from impacket import system_errors
+import struct
+from impacket import system_errors, LOG
 from impacket.dcerpc.v5.dtypes import WSTR, DWORD, LPWSTR, ULONG, LARGE_INTEGER, WORD, BYTE
-from impacket.dcerpc.v5.ndr import NDRCALL, NDRPOINTER, NDRUniConformantArray, NDRUniVaryingArray, NDRSTRUCT
+from impacket.dcerpc.v5.ndr import NDR, NDRCALL, NDRCONSTRUCTEDTYPE, NDRPOINTER, NDRUniConformantArray, NDRUniConformantVaryingArray, NDRUniVaryingArray, NDRSTRUCT
 from impacket.dcerpc.v5.rpcrt import DCERPCException
 from impacket.uuid import uuidtup_to_bin
 
@@ -218,15 +219,113 @@ class EvtRpcQueryNext(NDRCALL):
         ('Flags', DWORD),
     )
 
+
+class QueryNextResponseDwordArray(NDRUniVaryingArray):
+    item = DWORD
+
+    def fromString(self, data, offset=0):
+        offset0 = offset
+        for fieldName, fieldTypeOrClass in self.structure:
+            try:
+                offset += self.calculatePad(fieldTypeOrClass, offset)
+                offset += self.unpack(fieldName, fieldTypeOrClass, data, offset)
+            except Exception as e:
+                LOG.error(str(e))
+                LOG.error("Error unpacking field '%s | %s | %r'" % (fieldName, fieldTypeOrClass, data[offset:offset+256]))
+                raise
+        return offset - offset0
+
+    def unpack(self, fieldName, fieldTypeOrClass, data, offset=0):
+        # array specifier
+        two = fieldTypeOrClass.split('*')
+        if len(two) != 2:
+            return NDRCONSTRUCTEDTYPE.unpack(self, fieldName, fieldTypeOrClass, data, offset)
+
+        # The item type is determined by self.item
+        dataClassOrCode = self.item
+        self.fields['_tmpItem'] = dataClassOrCode(isNDR64=self._isNDR64)
+        numItems = self[two[1]]
+        nsofar = 0
+        answer = []
+        soFarItems = 0
+        offset0 = offset
+        while numItems and soFarItems < len(data) - offset:
+            # TODO unpack all items at once
+            itemn = dataClassOrCode(isNDR64=self._isNDR64)
+            size = itemn.fromString(data, offset+soFarItems)
+            answer.append(itemn)
+            nsofar += size
+            numItems -= 1
+            soFarItems = nsofar
+        del(self.fields['_tmpItem'])
+        self.fields[fieldName] = answer
+        return soFarItems + offset - offset0
+
+class QueryNextResponseByteArray(NDRUniVaryingArray):
+    item = 'c'
+
+    def fromString(self, data, offset=0):
+        offset0 = offset
+        for fieldName, fieldTypeOrClass in self.structure:
+            try:
+                offset += self.calculatePad(fieldTypeOrClass, offset)
+                offset += self.unpack(fieldName, fieldTypeOrClass, data, offset)
+            except Exception as e:
+                LOG.error(str(e))
+                LOG.error("Error unpacking field '%s | %s | %r'" % (fieldName, fieldTypeOrClass, data[offset:offset+256]))
+                raise
+        return offset - offset0
+
+    # @jit
+    def unpack(self, fieldName, fieldTypeOrClass, data, offset=0):
+        # array specifier
+        two = fieldTypeOrClass.split('*')
+        if len(two) != 2:
+            return NDRCONSTRUCTEDTYPE.unpack(self, fieldName, fieldTypeOrClass, data, offset)
+
+        offset0 = offset
+        numItems = self[two[1]]
+        # The item type is determined by self.item
+        item = self.item
+        dataClassOrCode = None
+        self.fields['_tmpItem'] = item
+
+        soFarItems = 0
+        answer = bytes(data[offset:offset + numItems])
+        del(self.fields['_tmpItem'])
+        self.fields[fieldName] = answer
+        return soFarItems + offset - offset0
+
 class EvtRpcQueryNextResponse(NDRCALL):
     structure = (
         ('NumActualRecords', DWORD),
-        ('EventDataIndices', DWORD_ARRAY),
-        ('EventDataSizes', DWORD_ARRAY),
+        ('EventDataIndices', QueryNextResponseDwordArray),
+        ('EventDataSizes', QueryNextResponseDwordArray),
         ('ResultBufferSize', DWORD),
-        ('ResultBuffer', BYTE_ARRAY),
+        ('ResultBuffer', QueryNextResponseByteArray),
         ('ErrorCode', ULONG),
     )
+
+    def __init__(self, data=None, isNDR64=False):
+        self.__constructed_fields = set([
+            'EventDataIndices', 'EventDataSizes', 'ResultBuffer'])
+        super().__init__(data, isNDR64)
+
+    def fromString(self, data, offset=0):
+        offset0 = offset
+        for fieldName, fieldTypeOrClass in self.structure:
+            try:
+                size = self.fields[fieldName].fromString(data, offset)
+                if fieldName in self.__constructed_fields:
+                    size += self.fields[fieldName].fromStringReferents(data, offset+size)
+                    size += self.fields[fieldName].fromStringReferent(data, offset+size)
+                offset += size
+            except Exception as e:
+                LOG.error(str(e))
+                LOG.error("Error unpacking field '%s | %s | %r'" % (fieldName, fieldTypeOrClass, data[offset:offset+256]))
+                raise
+        return offset - offset0
+
 
 class EvtRpcQuerySeek(NDRCALL):
     opnum = 12
