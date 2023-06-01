@@ -307,6 +307,9 @@ class Structure:
             if dataClassOrCode != b:
                 fields = {'self':self, 'inputDataLeft':data}
                 fields.update(self.fields)
+                method = getattr(self, dataClassOrCode, None)
+                if method is not None:
+                    return method()
                 return eval(dataClassOrCode, {}, fields)
             else:
                 return None

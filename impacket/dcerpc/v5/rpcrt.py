@@ -623,13 +623,13 @@ class MSRPCHeader(Structure):
     )
 
     structure = (
-        ('dataLen','_-pduData','self["frag_len"]-self["auth_len"]-self._SIZE-(8 if self["auth_len"] > 0 else 0)'),
+        ('dataLen','_-pduData', "calcDataLen"),
         ('pduData',':'),
-        ('_pad', '_-pad','(4 - ((self._SIZE + (16 if (self["flags"] & 0x80) > 0 else 0) + len(self["pduData"])) & 3) & 3)'),
+        ('_pad', '_-pad','calcPad'),
         ('pad', ':'),
-        ('_sec_trailer', '_-sec_trailer', '8 if self["auth_len"] > 0 else 0'),
+        ('_sec_trailer', '_-sec_trailer', 'calcSecTrailer'),
         ('sec_trailer',':'),
-        ('auth_dataLen','_-auth_data','self["auth_len"]'),
+        ('auth_dataLen','_-auth_data','calcAuthDataLen'),
         ('auth_data',':'),
     )
 
@@ -646,6 +646,18 @@ class MSRPCHeader(Structure):
             self['auth_data'] = b''
             self['sec_trailer'] = b''
             self['pad'] = b''
+
+    def calcDataLen(self):
+        return self["frag_len"]-self["auth_len"]-self._SIZE-(8 if self["auth_len"] > 0 else 0)
+
+    def calcPad(self):
+        return (4 - ((self._SIZE + (16 if (self["flags"] & 0x80) > 0 else 0) + len(self["pduData"])) & 3) & 3)
+
+    def calcSecTrailer(self):
+        return 8 if self["auth_len"] > 0 else 0
+
+    def calcAuthDataLen(self):
+        return self["auth_len"]
 
     def get_header_size(self):
         return self._SIZE + (16 if (self["flags"] & PFC_OBJECT_UUID) > 0 else 0)
