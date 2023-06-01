@@ -84,6 +84,7 @@ class Structure:
         self.fields    = {}
         self.rawData   = data
         self._addressFields = self._getAddressFields()
+        self._lengthFields = self._getLengthFields()
 
         if data is not None:
             self.fromString(data)
@@ -568,12 +569,18 @@ class Structure:
         return address_fields
 
     def findLengthFieldFor(self, fieldName):
-        descriptor = '-%s' % fieldName
-        l = len(descriptor)
+        return self._lengthFields.get(fieldName, None)
+
+    def _getLengthFields(self):
+        length_fields = {}
         for field in self.commonHdr+self.structure:
-            if field[1][-l:] == descriptor:
-                return field[0]
-        return None
+            fieldName = field[0]
+            descriptor = '-' + fieldName
+            l = len(descriptor)
+            for field in self.commonHdr+self.structure:
+                if field[1][-l:] == descriptor:
+                    length_fields[fieldName] = field[0]
+        return length_fields
 
     def zeroValue(self, format):
         two = format.split('*')
