@@ -617,7 +617,7 @@ class MSRPCHeader(Structure):
         ('type','B=0'),                                   # 2
         ('flags','B=0'),                                  # 3
         ('representation','<L=0x10'),                     # 4
-        ('frag_len','<H=self._SIZE+len(auth_data)+(16 if (self["flags"] & 0x80) > 0 else 0)+len(pduData)+len(pad)+len(sec_trailer)'),  # 8
+        ('frag_len','<H=calcFragLen'),  # 8
         ('auth_len','<H=len(auth_data)'),                 # 10
         ('call_id','<L=1'),                               # 12    <-- Common up to here (including this)
     )
@@ -658,6 +658,9 @@ class MSRPCHeader(Structure):
 
     def calcAuthDataLen(self):
         return self["auth_len"]
+
+    def calcFragLen(self):
+        return self._SIZE+len(self["auth_data"])+(16 if (self["flags"] & 0x80) > 0 else 0)+len(self["pduData"])+len(self["pad"])+len(self["sec_trailer"])
 
     def get_header_size(self):
         return self._SIZE + (16 if (self["flags"] & PFC_OBJECT_UUID) > 0 else 0)

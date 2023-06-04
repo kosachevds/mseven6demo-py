@@ -138,6 +138,8 @@ class Structure:
                     data += (b'\x00'*self.alignment)[:-(len(data) % self.alignment)]
 
         #if len(data) % self.alignment: data += ('\x00'*self.alignment)[:-(len(data) % self.alignment)]
+        if len(data) > 0:
+            self.data = data
         return data
 
     def fromString(self, data):
@@ -206,7 +208,19 @@ class Structure:
             except:
                 fields = {'self':self}
                 fields.update(self.fields)
-                return self.pack(two[0], eval(two[1], {}, fields))
+                method = getattr(self, two[1], None)
+                evalResult = None
+                if method is not None:
+                    evalResult = method()
+                elif len(two[1]) > 2 and two[1][:2] == "0x" and two[1][3:].isdigit():
+                    evalResult = int(two[1], base=16)
+                elif two[1].isdigit():
+                    evalResult = int(two[1])
+                elif two[1] == '""':
+                    evalResult = ""
+                else:
+                    evalResult = eval(two[1], {}, fields)
+                return self.pack(two[0], evalResult)
 
         # address specifier
         two = format.split('&')
