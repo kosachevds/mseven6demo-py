@@ -206,18 +206,18 @@ class Structure:
             try:
                 return self.pack(two[0], data)
             except:
-                fields = {'self':self}
+                fields = {'self': self}
                 fields.update(self.fields)
                 method = getattr(self, two[1], None)
                 evalResult = None
                 if method is not None:
                     evalResult = method()
-                elif len(two[1]) > 2 and two[1][:2] == "0x" and two[1][3:].isdigit():
+                elif len(two[1]) > 2 and two[1][:2] == '0x' and two[1][3:].isdigit():
                     evalResult = int(two[1], base=16)
                 elif two[1].isdigit():
                     evalResult = int(two[1])
                 elif two[1] == '""':
-                    evalResult = ""
+                    evalResult = ''
                 else:
                     evalResult = eval(two[1], {}, fields)
                 return self.pack(two[0], evalResult)
