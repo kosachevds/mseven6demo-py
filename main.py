@@ -14,7 +14,6 @@ _DOMAIN = "."
 _BATCH_SIZE = 31
 _EPS_WRITE_INTERVAL_SEC = 2
 _MAX_EVENTS = 1000
-_RENDERING = True
 
 
 def main():
@@ -22,6 +21,9 @@ def main():
     username = sys.argv[2]
     password = sys.argv[3]
     channel = sys.argv[4]
+    rendering = False
+    if len(sys.argv) > 5:
+        rendering = strtobool(sys.argv[5])
 
     string_binding = epm.hept_map(host, _IFACE_UUID, protocol="ncacn_ip_tcp")
     rpc_transport = transport.DCERPCTransportFactory(string_binding)
@@ -56,7 +58,7 @@ def main():
             event_size = resp['EventDataSizes'][i]['Data']
             event = resp['ResultBuffer'][event_offset:event_offset + event_size]
             events.append(ResultSet(event).xml())
-            if _RENDERING:
+            if rendering:
                 RenderMessageDefault(dce)
     stop = datetime.now()
     print("EPS: ", len(events) / (stop - start).total_seconds())
@@ -112,6 +114,16 @@ def render_message(dce, event_id_bin, flags):
         raise even6.DCERPCSessionError(error_code=err_code)
     raw_text = b''.join(dce_resp['String'])
     return raw_text.decode('utf-16').strip("\x00")
+
+
+def strtobool(val):
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return True
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return False
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
 
 
 if __name__ == "__main__":
