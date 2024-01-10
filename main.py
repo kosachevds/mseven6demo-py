@@ -23,7 +23,7 @@ def main():
 
     string_binding = epm.hept_map(args.host, _IFACE_UUID, protocol="ncacn_ip_tcp")
     rpc_transport = transport.DCERPCTransportFactory(string_binding)
-    rpc_transport.set_credentials(args.username, args.password, _DOMAIN)
+    rpc_transport.set_credentials(args.user, args.password, _DOMAIN)
     dce = rpc_transport.get_dce_rpc()
     dce.set_auth_level(rpcrt.RPC_C_AUTHN_LEVEL_PKT_PRIVACY)
     dce.connect()

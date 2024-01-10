@@ -6,7 +6,7 @@ import sys
 @dataclass
 class Settings:
     host: str
-    username: str
+    user: str
     password: str
     channel: str
 
