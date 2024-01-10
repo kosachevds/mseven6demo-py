@@ -6,6 +6,7 @@ from impacket.dcerpc.v5 import dtypes, epm, even6, ndr, rpcrt, transport
 
 from binxml import ResultSet
 import mseven6ext
+import settings
 
 _IFACE_UUID = even6.MSRPC_UUID_EVEN6
 _EVT_SEEK_RELATIVE_TO_FIRST = 0x00000001
@@ -18,21 +19,18 @@ _RENDERING = True
 
 
 def main():
-    host = sys.argv[1]
-    username = sys.argv[2]
-    password = sys.argv[3]
-    channel = sys.argv[4]
+    args = settings.parse_args()
 
-    string_binding = epm.hept_map(host, _IFACE_UUID, protocol="ncacn_ip_tcp")
+    string_binding = epm.hept_map(args.host, _IFACE_UUID, protocol="ncacn_ip_tcp")
     rpc_transport = transport.DCERPCTransportFactory(string_binding)
-    rpc_transport.set_credentials(username, password, _DOMAIN)
+    rpc_transport.set_credentials(args.username, args.password, _DOMAIN)
     dce = rpc_transport.get_dce_rpc()
     dce.set_auth_level(rpcrt.RPC_C_AUTHN_LEVEL_PKT_PRIVACY)
     dce.connect()
     dce.bind(_IFACE_UUID)
 
     request = even6.EvtRpcRegisterLogQuery()
-    request['Path'] = channel + '\x00'
+    request['Path'] = args.channel + '\x00'
     request['Query'] = "*" + '\x00'
     request['Flags'] = even6.EvtQueryChannelName | even6.EvtReadNewestToOldest
 
