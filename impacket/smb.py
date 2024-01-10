@@ -3364,27 +3364,27 @@ class SMB(object):
                 av_pairs = ntlm.AV_PAIRS(ntlmChallenge['TargetInfoFields'][:ntlmChallenge['TargetInfoFields_len']])
                 if av_pairs[ntlm.NTLMSSP_AV_HOSTNAME] is not None:
                    try:
-                       self.__server_name = av_pairs[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le')
+                       self.__server_name = av_pairs[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le', errors='replace')
                    except UnicodeDecodeError:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
                 if av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME] is not None:
                    try:
-                       if self.__server_name != av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le'):
-                           self.__server_domain = av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le')
+                       if self.__server_name != av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le', errors='replace'):
+                           self.__server_domain = av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le', errors='replace')
                    except UnicodeDecodeError:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
                 if av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME] is not None:
                    try:
-                       self.__server_dns_domain_name = av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME][1].decode('utf-16le')
+                       self.__server_dns_domain_name = av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME][1].decode('utf-16le', errors='replace')
                    except UnicodeDecodeError:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
 
                 if av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME] is not None:
                    try:
-                       self.__server_dns_host_name = av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME][1].decode('utf-16le')
+                       self.__server_dns_host_name = av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME][1].decode('utf-16le', errors='replace')
                    except UnicodeDecodeError:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
@@ -3954,9 +3954,9 @@ class SMB(object):
             while findParameterBlock['SearchCount'] > 0:
                 record = SMBFindFileBothDirectoryInfo(data = findData)
 
-                shortname = record['ShortName'].decode('utf-16le') if self.__flags2 & SMB.FLAGS2_UNICODE else \
+                shortname = record['ShortName'].decode('utf-16le', errors='replace') if self.__flags2 & SMB.FLAGS2_UNICODE else \
                                                                         record['ShortName'].decode('cp437')
-                filename = record['FileName'].decode('utf-16le') if self.__flags2 & SMB.FLAGS2_UNICODE else \
+                filename = record['FileName'].decode('utf-16le', errors='replace') if self.__flags2 & SMB.FLAGS2_UNICODE else \
                                                                         record['FileName'].decode('cp437')
 
                 fileRecord = SharedFile(record['CreationTime'], record['LastAccessTime'], record['LastChangeTime'],

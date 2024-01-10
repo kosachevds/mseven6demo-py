@@ -934,27 +934,27 @@ class SMB3:
                 av_pairs = ntlm.AV_PAIRS(ntlmChallenge['TargetInfoFields'][:ntlmChallenge['TargetInfoFields_len']])
                 if av_pairs[ntlm.NTLMSSP_AV_HOSTNAME] is not None:
                    try:
-                       self._Session['ServerName'] = av_pairs[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le')
+                       self._Session['ServerName'] = av_pairs[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le', errors='replace')
                    except:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
                 if av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME] is not None:
                    try:
-                       if self._Session['ServerName'] != av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le'):
-                           self._Session['ServerDomain'] = av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le')
+                       if self._Session['ServerName'] != av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le', errors='replace'):
+                           self._Session['ServerDomain'] = av_pairs[ntlm.NTLMSSP_AV_DOMAINNAME][1].decode('utf-16le', errors='replace')
                    except:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
                 if av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME] is not None:
                    try:
-                       self._Session['ServerDNSDomainName'] = av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME][1].decode('utf-16le')
+                       self._Session['ServerDNSDomainName'] = av_pairs[ntlm.NTLMSSP_AV_DNS_DOMAINNAME][1].decode('utf-16le', errors='replace')
                    except:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
 
                 if av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME] is not None:
                    try:
-                       self._Session['ServerDNSHostName'] = av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME][1].decode('utf-16le')
+                       self._Session['ServerDNSHostName'] = av_pairs[ntlm.NTLMSSP_AV_DNS_HOSTNAME][1].decode('utf-16le', errors='replace')
                    except:
                        # For some reason, we couldn't decode Unicode here.. silently discard the operation
                        pass
@@ -1723,8 +1723,8 @@ class SMB3:
                         files.append(smb.SharedFile(fileInfo['CreationTime'], fileInfo['LastAccessTime'],
                                                     fileInfo['LastChangeTime'], fileInfo['EndOfFile'],
                                                     fileInfo['AllocationSize'], fileInfo['ExtFileAttributes'],
-                                                    fileInfo['FileName'].decode('utf-16le'),
-                                                    fileInfo['FileName'].decode('utf-16le')))
+                                                    fileInfo['FileName'].decode('utf-16le', errors='replace'),
+                                                    fileInfo['FileName'].decode('utf-16le', errors='replace')))
                         nextOffset = fileInfo['NextEntryOffset']
                         res = res[nextOffset:]
                 except SessionError as e:

@@ -551,7 +551,7 @@ class RPCProxyClient(HTTPClientSecurityProvider):
 
         if not self.__remoteName:
             ntlmssp = self.get_ntlmssp_info()
-            self.__remoteName = ntlmssp[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le')
+            self.__remoteName = ntlmssp[ntlm.NTLMSSP_AV_HOSTNAME][1].decode('utf-16le', errors='replace')
             self._stringbinding.set_network_address(self.__remoteName)
             LOG.debug('StringBinding has been changed to %s' % self._stringbinding)
 
